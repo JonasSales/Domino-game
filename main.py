@@ -10,7 +10,9 @@ pecas = jogador()
 carrocoes = carroca()
 jogador1 = (pecas[0])
 jogador2 = (pecas[1])
-monte = (pecas[2])
+jogador3 = (pecas[2])
+jogador4 = (pecas[3])
+monte = (jogador3+jogador4)
 mesa = []
 vez = 0
 
@@ -57,6 +59,9 @@ def clear_screen_delay():
 
 def mostrar_mesa(mesa,jogador):
     os.system("cls")
+    print("A quantidade de peças jogadas foi de: ",len(mesa)/2,
+          "\nA quantidade de jogadas foi de:",len(mesa)/4)
+
     print(mesa)
     mostrar_pecas(jogador)
 
@@ -87,7 +92,7 @@ def verificador_primeira_jogada(jogador):
             break
         else:
             verificacao = False
-    return verificacao
+    return verificacao,x
 
         
                    
@@ -152,16 +157,15 @@ def player(jogador):
     mostrar_mesa(mesa,jogador)
     if len(mesa) == 0:
             while True:
-                if verificador_primeira_jogada(jogador) == True:
+                verificacao = verificador_primeira_jogada(jogador)[0]
+                if verificacao == True:
                     primeira_jogada(jogador)
                     break
                 else:
                     os.system('cls')
                     print("Como você não tinha carroças no inicio do jogo\n"
-                        "fomos obrigados a puxar uma peça em seu jogo.\n"
-                        "Jogue na proxima rodada")
+                          "Jogue na proxima rodada")
                     sleep(2)
-                    puxar_peca(jogador)
                     break                
     else:
         while True:
@@ -171,20 +175,23 @@ def player(jogador):
             else:
                 os.system('cls')
                 print("Como você não tinha jogadas disponiveis\n "
-                    "fomos obrigados a puxar uma peça em seu jogo.\n"
-                    "Jogue na proxima rodada")
+                      "Jogue na proxima rodada")
                 sleep(2)
-                puxar_peca(jogador)
                 break
 
 def bot(jogador):
     if len(mesa) == 0:
         while True:
-            if verificador_primeira_jogada(jogador) == True:
-                primeira_jogada_bot(jogador)
+            verificacao = verificador_primeira_jogada(jogador)[0]
+            jogada = verificador_primeira_jogada(jogador)[1]
+            if verificacao == True:
+                primeira_jogada_bot(jogador,jogada)
                 break
             else:
-                puxar_peca(jogador)
+                os.system('cls')
+                print("Como este jogador não tinha jogadas disponiveis\n "
+                      "Então ele joga na proxima rodada")
+                sleep(2)                
                 break
     else:
         while True:
@@ -194,18 +201,19 @@ def bot(jogador):
                 jogada_no_meio_do_jogo_bot(jogador,jogada_bot)
                 break
             else:
-                puxar_peca(jogador)
+                os.system('cls')
+                print("Como este jogador não tinha jogadas disponiveis\n "
+                      "Então ele joga na proxima rodada")
+                sleep(2)                
                 break
 
 
 
 def primeira_jogada_bot(jogador,jogada):
-    for x in jogador:
-        if jogada in carrocoes.values():
-            remover_peca = len((x))
-            mesa.append(jogador[jogada][0])
-            mesa.append(jogador[jogada][-1])
-            jogador.pop(remover_peca)
+    mesa.append(jogada[0])
+    mesa.append(jogada[-1])
+    jogador.remove(jogada)
+
 
 
 
@@ -233,27 +241,65 @@ def jogada_no_meio_do_jogo_bot(jogador,jogada):
         jogador.remove(x)
 
 
-
 while True:
-    if vez == 0:
-        os.system('cls')
-        print ("É a vez do jogador 1")
-        sleep(2)            
-        player(jogador1)
-        vez +=1
-        if len(jogador1) == 0:
-            os.system('cls')
-            print("Jogador1 ganhou")
-            break
-    #Vez do jogador 2
-    elif vez == 1:
-        os.system('cls')
-        print ("É a vez do jogador 2")
-        sleep(2)
-        bot(jogador2)
-        vez -=1
-        if jogador2 == 0:
-            os.system('cls')
-            print("Jogador 2 ganhou")
-            break 
+    os.system("cls")
+    x = "*"
+    print(f"{x*44}")
+    print("        [1] Para jogar com 4 players\n"
+          "        [2] Em breve\n"
+          "        [0] Para sair do jogo")
+    print(f"{x*44}")
+    acao = int(input("        Deseja jogar qual em qual modo?\n"
+                     "--------->"))
+    
 
+    if acao == 1:
+        while True:
+            #Vez do jogador 1
+            if vez == 0:
+                os.system('cls')
+                print ("É a vez do jogador 1")
+                sleep(2)            
+                player(jogador1)
+                vez +=1
+                if len(jogador1) == 0:
+                    os.system('cls')
+                    print("Jogador 1 ganhou")
+                    break
+            #Vez do jogador 2
+            elif vez == 1:
+                os.system('cls')
+                print ("É a vez do jogador 2")
+                sleep(2)
+                bot(jogador2)
+                vez +=1
+                if jogador2 == 0:
+                    os.system('cls')
+                    print("Jogador 2 ganhou")
+                    break
+            #Vez do jogador 3
+            elif vez == 2:
+                os.system('cls')
+                print ("É a vez do jogador 3")
+                sleep(2)            
+                bot(jogador3)
+                vez +=1
+                if len(jogador3) == 0:
+                    os.system('cls')
+                    print("Jogador 3 ganhou")
+                    break
+            #Vez do jogador 4
+            elif vez == 3:
+                os.system('cls')
+                print ("É a vez do jogador 4")
+                sleep(2)
+                bot(jogador4)
+                vez = vez*0
+                if jogador4 == 0:
+                    os.system('cls')
+                    print("Jogador 4 ganhou")
+                    break               
+    elif acao == 2:
+        pass
+    elif acao == 0:
+        break

@@ -1,4 +1,4 @@
-from random import sample
+from random import randint
 def retorno_pecas():
     return ['0:0','0:1','1:1',
             '0:2','1:2','2:2',
@@ -18,9 +18,9 @@ def distribuidor_de_pecas():
     pecas_jogadores = [[] for _ in range(4)]
     reserva_de_pecas = retorno_pecas()
     for _ in range(7):
-        for jogador in range(2):
-            peca_aleatoria = sample(reserva_de_pecas, 1)[0]
+        for jogador in range(4):
+            peca_aleatoria =reserva_de_pecas.pop(randint(0,len(reserva_de_pecas)-1))
             pecas_jogadores[jogador].append(peca_aleatoria)
-            reserva_de_pecas.remove(peca_aleatoria)
-    ordem_aleatoria = sample(reserva_de_pecas,len(reserva_de_pecas))
-    return pecas_jogadores,ordem_aleatoria
+#            reserva_de_pecas.remove(peca_aleatoria)
+    return pecas_jogadores
+
