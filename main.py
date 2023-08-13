@@ -273,7 +273,7 @@ while True:
                 sleep(2)
                 bot(jogador2)
                 vez +=1
-                if jogador2 == 0:
+                if len(jogador2) == 0:
                     os.system('cls')
                     print("Jogador 2 ganhou")
                     break
