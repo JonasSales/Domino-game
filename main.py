@@ -1,40 +1,41 @@
-from jogador import jogador,mostrar_pecas
-from pecas import carroca
+from player import player,show_piece
+from piece import wagon
 from time import sleep
 from random import randint
 import os
 
 
 
-def jogada(jogador,peca_escolhida):
-    p1 = (jogador[peca_escolhida-1][0])
-    p2 = (jogador[peca_escolhida-1][-1])
-    if p1 == mesa[0]:
-        mesa.insert(0,p1)
-        mesa.insert(0,p2)
-        jogador.pop(peca_escolhida-1)
-    elif p2 == mesa[0]:
-        mesa.insert(0,p2)
-        mesa.insert(0,p1)
-        jogador.pop(peca_escolhida-1)
-    elif p1 == mesa[-1]:
-        mesa.insert(len(mesa),p1)
-        mesa.insert(len(mesa),p2)
-        jogador.pop(peca_escolhida-1)
-    elif p2 == mesa[-1]:
-        mesa.insert(len(mesa),p2)
-        mesa.insert(len(mesa),p1)
-        jogador.pop(peca_escolhida-1)
+def play(player,chosen_piece):
+    p1 = (player[chosen_piece-1][0])
+    p2 = (player[chosen_piece-1][-1])
+    if p1 == table[0]:
+        table.insert(0,p1)
+        table.insert(0,p2)
+        player.pop(chosen_piece-1)
+    elif p2 == table[0]:
+        table.insert(0,p2)
+        table.insert(0,p1)
+        player.pop(chosen_piece-1)
+    elif p1 == table[-1]:
+        table.insert(len(table),p1)
+        table.insert(len(table),p2)
+        player.pop(chosen_piece-1)
+    elif p2 == table[-1]:
+        table.insert(len(table),p2)
+        table.insert(len(table),p1)
+        player.pop(chosen_piece-1)
     else:
-        os.system("cls")
-        print("Jogada invalida")
-        sleep(2)
+        clear_screen_delay()
 
 
-
-def puxar_peca(jogador):
-    peca_aleatoria = monte.pop(randint(0,(len(monte))-1))
-    jogador.append(peca_aleatoria)
+def pull_piece(player):
+    os.system("cls")
+    print("Como este jogador não tinha peças para jogar"
+    "\npuxamos uma para a sua mão.")
+    sleep(2)
+    random_piece = mount.pop(randint(0,(len(mount))-1))
+    player.append(random_piece)
 
 
 
@@ -45,260 +46,264 @@ def clear_screen_delay():
 
 
 
-def mostrar_mesa(mesa,jogador):
+def show_table(table,player):
     os.system("cls")
-    print("A quantidade de peças jogadas foi de: ",len(mesa)/2,
-          "\nA quantidade de jogadas foi de:",len(mesa)/4)
-
-    print(mesa)
-    mostrar_pecas(jogador)
+    print(table)
+    show_piece(player)
 
 
 
-def primeira_jogada(jogador):
+def first_play(player):
     while True:
         try:    
-            mostrar_mesa(mesa,jogador)
-            peca_escolhida = int(input("Digite uma peça para jogar:"))
-            if jogador[peca_escolhida-1] in carrocoes.values():
-                mesa.append(jogador[peca_escolhida-1][0])
-                mesa.append(jogador[peca_escolhida-1][-1])
-                jogador.pop(peca_escolhida-1)
+            show_table(table,player)
+            chosen_piece = int(input("Digite uma peça para jogar:"))
+            if player[chosen_piece-1] in carrocoes.values():
+                table.append(player[chosen_piece-1][0])
+                table.append(player[chosen_piece-1][-1])
+                player.pop(chosen_piece-1)
                 break
             else:
                 clear_screen_delay()
         except:
-            os.system("cls")
-            print("Jogada invalida")
-            sleep(2)
+            clear_screen_delay()
 
 
 
-def verificador_primeira_jogada(jogador):
-    for x in jogador:
+def first_move_check(player):
+    for x in player:
         if x in carrocoes.values():
-            verificacao = True
-            break
-        else:
-            verificacao = False
-    return verificacao,x
+            return True,x
+    return False,x
 
         
                    
-def jogada_no_meio_do_jogo_player(jogador):
+def middlegame(player):
     while True:
         try:    
-            mostrar_mesa(mesa,jogador)
-            peca_escolhida = int(input("Digite uma peça para jogar:"))
-            peca_jogador = jogador[peca_escolhida-1]
-            verificacao = verificar_mesa(mesa,peca_jogador)
-            if verificacao == True:
-                jogada(jogador,peca_escolhida)
+            show_table(table,player)
+            chosen_piece = int(input("Digite uma peça para jogar:"))
+            player_piece = player[chosen_piece-1]
+            if check_table(table,player_piece) == True:
+                play(player,chosen_piece)
                 break
             else:
-                os.system("cls")
-                print("Jogada invalida")
-                sleep(2)
+                clear_screen_delay()
         except:
-                os.system("cls")
-                print("Jogada invalida")
-                sleep(2)            
+            clear_screen_delay()            
 
 
 
-def verificar_mesa(mesa,peca_escolhida):
-    p1 = peca_escolhida[0]
-    p2 = peca_escolhida[-1]
-    if p1 in mesa[0]:
-        retorno = True
-    elif p2 in mesa [0]:
-        retorno = True
-    elif p1 in mesa[-1]:
-        retorno = True
-    elif p2 in mesa[-1]:
-        retorno = True
-    else:
-        retorno = False
-    return retorno
+def check_table(table,player_piece):
+    p1 = player_piece[0]
+    p2 = player_piece[-1]
+    if p1 in table[0]:
+        return True
+    elif p2 in table [0]:
+        return True
+    elif p1 in table[-1]:
+        return True
+    elif p2 in table[-1]:
+        return True
+    return False
 
 
 
-def meio_de_jogo(jogador):
-    for x in jogador:
-        if x[0] in mesa[0]:
-            verificar = True
-            break
-        elif x[0] in mesa[-1]:
-            verificar = True
-            break
-        if x[-1] in mesa[0]:
-            verificar = True
-            break
-        elif x[-1] in mesa[-1]:
-            verificar = True
-            break        
-        else:
-            verificar = False
-    return verificar,x
+def move_check(player):
+    for x in player:
+        if x[0] in table[0]:
+            return True,x
+        elif x[0] in table[-1]:
+            return True,x
+        if x[-1] in table[0]:
+            return True,x
+        elif x[-1] in table[-1]:
+            return True,x
+    return False,x
 
 
 
-def player(jogador):
-    mostrar_mesa(mesa,jogador)
-    if len(mesa) == 0:
+def player(player):
+    show_table(table,player)
+    if len(table) == 0:
             while True:
-                verificacao = verificador_primeira_jogada(jogador)[0]
-                if verificacao == True:
-                    primeira_jogada(jogador)
+                verification = first_move_check(player)[0]
+                if verification == True:
+                    first_play(player)
                     break
                 else:
-                    os.system('cls')
-                    print("Como você não tinha carroças no inicio do jogo\n"
-                          "Jogue na proxima rodada")
-                    sleep(2)
+                    if len(mount) > 0:
+                        sleep(2)
+                        pull_piece(player)
+                        break
+                    play_unavailable()
                     break                
     else:
         while True:
-            if meio_de_jogo(jogador)[0] == True:
-                jogada_no_meio_do_jogo_player(jogador)
+            if move_check(player)[0] == True:
+                middlegame(player)
                 break
             else:
-                os.system('cls')
-                print("Como você não tinha jogadas disponiveis\n "
-                      "Jogue na proxima rodada")
-                sleep(2)
+                if len(mount) > 0:
+                    pull_piece(player)
+                    break
+                play_unavailable()
                 break
 
 
 
-def bot(jogador):
-    if len(mesa) == 0:
+def play_unavailable():
+    os.system('cls')
+    print("Como este jogador não tinha jogadas disponiveis\n "
+            "Então ele joga na proxima rodada") 
+
+
+
+def bot(player):
+    if len(table) == 0:
         while True:
-            verificacao = verificador_primeira_jogada(jogador)[0]
-            jogada = verificador_primeira_jogada(jogador)[1]
-            if verificacao == True:
-                primeira_jogada_bot(jogador,jogada)
+            verification = first_move_check(player)[0]
+            play = first_move_check(player)[1]
+            if verification == True:
+                first_play_bot(player,play)
                 break
             else:
-                os.system('cls')
-                print("Como este jogador não tinha jogadas disponiveis\n "
-                      "Então ele joga na proxima rodada")
-                sleep(2)                
+                if len(mount) > 0:
+                    pull_piece(player)
+                    break
+                play_unavailable()                
                 break
     else:
         while True:
-            verificacao = meio_de_jogo(jogador)[0]
-            jogada_bot = meio_de_jogo(jogador)[1]
-            if verificacao == True:
-                jogada_no_meio_do_jogo_bot(jogador,jogada_bot)
+            verification = move_check(player)[0]
+            bot_play = move_check(player)[1]
+            if verification == True:
+                middlegame_bot(player,bot_play)
                 break
             else:
-                os.system('cls')
-                print("Como este jogador não tinha jogadas disponiveis\n "
-                      "Então ele joga na proxima rodada")
-                sleep(2)                
+                if len(mount) > 0:
+                    pull_piece(player)
+                    break
+                play_unavailable()                
                 break
 
 
 
-def primeira_jogada_bot(jogador,jogada):
-    mesa.append(jogada[0])
-    mesa.append(jogada[-1])
-    jogador.remove(jogada)
+def first_play_bot(player,play):
+    table.append(play[0])
+    table.append(play[-1])
+    player.remove(play)
 
 
 
-def jogada_no_meio_do_jogo_bot(jogador,jogada):
-    for x in jogador:
-        if jogada == x:
+def middlegame_bot(player,play):
+    for x in player:
+        if play == x:
             break
-    p1 = jogada[0]
-    p2 = jogada[-1]
-    if p1 in mesa[0]:
-        mesa.insert(0,p1)
-        mesa.insert(0,p2)
-        jogador.remove(x)
-    elif p2 in mesa[0]:
-        mesa.insert(0,p2)
-        mesa.insert(0,p1)
-        jogador.remove(x)
-    elif p1 in mesa[-1]:
-        mesa.insert(len(mesa),p1)
-        mesa.insert(len(mesa),p2)
-        jogador.remove(x)
-    elif p2 in mesa[-1]:
-        mesa.insert(len(mesa),p2)
-        mesa.insert(len(mesa),p1)
-        jogador.remove(x)
+    p1 = play[0]
+    p2 = play[-1]
+    if p1 in table[0]:
+        table.insert(0,p1)
+        table.insert(0,p2)
+        player.remove(x)
+    elif p2 in table[0]:
+        table.insert(0,p2)
+        table.insert(0,p1)
+        player.remove(x)
+    elif p1 in table[-1]:
+        table.insert(len(table),p1)
+        table.insert(len(table),p2)
+        player.remove(x)
+    elif p2 in table[-1]:
+        table.insert(len(table),p2)
+        table.insert(len(table),p1)
+        player.remove(x)
 
 
 
-def vez_jogador(jogador,x):
+def turn_player(player,x):
     os.system('cls')
     print (f"É a vez do jogador {x}")
     sleep(2)
-    bot(jogador)
+    bot(player)
 
 
+
+def win_player(x):
+    os.system('cls')
+    print(f"Jogador {x} ganhou")
+    sleep(2)
+
+
+
+def checking_movements_on_the_table(j1,j2,j3,j4,mesa):
+    players = j1+j2+j3+j4
+    while True:
+        for x in players:
+            if (x[0] or x[-1]) in mesa:
+                return True           
+        return False
 
 while True:
-    pecas = jogador()
-    carrocoes = carroca()
-    jogador1 = (pecas[0])
-    jogador2 = (pecas[1])
-    jogador3 = (pecas[2])
-    jogador4 = (pecas[3])
-    monte = (jogador3+jogador4)
-    mesa = []
-    vez = True
+    parts = player()
+    carrocoes = wagon()
+    player_1 = (parts[0])
+    player_2 = (parts[1])
+    player_3 = (parts[2])
+    player_4 = (parts[3])
+    mount = (player_3+player_4)
+    table = []
 
     os.system("cls")
-    x = "*"
-    print(f"{x*44}")
-    print("|       [1] Para jogar com 4 players       |\n"
-          "|       [2] Em breve                       |\n"
-          "|       [0] Para sair do jogo              |")
-    print(f"{x*44}")
-    acao = int(input("        Deseja jogar qual em qual modo?\n"
+    print(f"{'*'*44}")
+    print("|       [1] Modo com 4 players       |\n"
+          "|       [2] Modo com 2 players             |\n"
+          "|       [3] Para sair do jogo              |")
+    print(f"{'*'*44}")
+    action = int(input("        Deseja jogar qual em qual modo?\n"
                      "--------->"))
 
-    if acao == 1:
-        while True:
-            if vez == True:
-                vez_jogador(jogador1,1)
-                player(jogador1)
-                if len(jogador1) == 0:
-                    os.system('cls')
-                    print("Jogador 1 ganhou")
-                    sleep(2)
-                    break
-                vez_jogador(jogador2,2)
-                if len(jogador2) == 0:
-                    os.system('cls')
-                    print("Jogador 2 ganhou")
-                    sleep(2)
-                    break
-                vez_jogador(jogador3,3)
-                if len(jogador3) == 0:
-                    os.system('cls')                   
-                    print("Jogador 3 ganhou")
-                    sleep(2)
-                    break
-                vez_jogador(jogador4,4)
-                if jogador4 == 0:
-                    os.system('cls')
-                    print("Jogador 4 ganhou")
-                    sleep(2)
-                    break
-            else:
+    if action == 1:
+        mount = []
+        while True:          
+            if len(player_1) == 0:
+                win_player(1)
+                break
+            elif len(player_2) == 0:
+                win_player(2)
+                break
+            elif len(player_3) == 0:
+                win_player(3)
+                break 
+            elif len(player_4) == 0:
+                win_player(4)
+                break
+            player(player_1)
+            turn_player(player_2,2)
+            turn_player(player_3,3)
+            turn_player(player_4,4)
+            if checking_movements_on_the_table(player_1,player_2,player_3,player_4,table) == False:
+                os.system('cls')
                 sleep(2)
-                print("O jogo fechou, infelizmente não houve ganhador!!")
-                break              
-    elif acao == 2:
-        os.system('cls')
-        for x in range(0,10):
-            print("*************Em breve*************")
-        sleep(2)
-    elif acao == 0:
+                print("Infelizmente não havia mais nenhuma jogada possível\n"
+                      "e se foi obrigado fechar o jogo.")
+                break
+    elif action == 2:
+        while True:
+            if len(player_1) == 0:
+                win_player(1)
+                break
+            elif len(player_2) == 0:
+                win_player(2)
+                break
+            player(player_1)
+            turn_player(player_2,2)
+            if checking_movements_on_the_table(player_1,player_2,"","",table) == False:
+                os.system('cls')
+                sleep(2)
+                print("Infelizmente não havia mais nenhuma jogada possível\n"
+                      "e se foi obrigado fechar o jogo.")
+                break    
+    elif action == 3:
         os.system('cls')
         break
